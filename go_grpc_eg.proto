@@ -20,9 +20,10 @@ package go_grpc_eg;
 
 
 service Greeter {
-rpc CalculateSquare(Int32) returns (Int32) {};
+rpc CalculateSquare(Int64) returns (Int64) {};
+rpc CalculateCube(Int64) returns (Int64) {};
 }
 
-message Int32 {
-  int32 value = 1;
+message Int64 {
+  int64 value = 1;
 }

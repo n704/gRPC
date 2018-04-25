@@ -18,10 +18,16 @@ const (
 // server is used to implement helloworld.GreeterServer.
 type server struct{}
 
-func (s *server) CalculateSquare(ctx context.Context, in *pb.Int32) (*pb.Int32, error) {
+func (s *server) CalculateSquare(ctx context.Context, in *pb.Int64) (*pb.Int64, error) {
 	newValue := in.Value * in.Value
 	fmt.Printf("Square of %d is %d\n", in.Value, newValue)
-	return &pb.Int32{Value: newValue}, nil
+	return &pb.Int64{Value: newValue}, nil
+}
+
+func (s *server) CalculateCube(ctx context.Context, in *pb.Int64) (*pb.Int64, error) {
+	newValue := in.Value * in.Value * in.Value
+	fmt.Printf("Cube of %d: %d\n", in.Value, newValue)
+	return &pb.Int64{Value: newValue}, nil
 }
 
 func main() {

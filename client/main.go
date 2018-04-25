@@ -1,9 +1,8 @@
 package main
 
 import (
+	"flag"
 	"log"
-	"os"
-	"strconv"
 	"time"
 
 	pb "github.com/n704/go_grpc_eg"
@@ -24,19 +23,21 @@ func main() {
 	}
 	defer conn.Close()
 	c := pb.NewGreeterClient(conn)
-
+	square := flag.Int64("square", 1, "find square of number")
+	cube := flag.Int64("cube", 1, "find cube of number")
+	flag.Parse()
 	// Contact the server and print out its response.
-	value := defaultName
-	if len(os.Args) > 1 {
-		value, _ = strconv.Atoi(os.Args[1])
-
-	}
-	i32value := int32(value)
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
-	r, err := c.CalculateSquare(ctx, &pb.Int32{Value: i32value})
+	r, err := c.CalculateSquare(ctx, &pb.Int64{Value: *square})
 	if err != nil {
 		log.Fatalf("could not greet: %v", err)
 	}
-	log.Print(r.Value)
+	log.Printf("Square of %d: %d\n", *square, r.Value)
+	r, err = c.CalculateCube(ctx, &pb.Int64{Value: *cube})
+	if err != nil {
+		log.Fatalf("could not greet: %v", err)
+	}
+	log.Printf("Cube of %d: %d\n", *cube, r.Value)
+
 }

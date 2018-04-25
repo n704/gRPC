@@ -8,7 +8,7 @@ It is generated from these files:
 	go_grpc_eg.proto
 
 It has these top-level messages:
-	Int32
+	Int64
 */
 package go_grpc_eg
 
@@ -32,16 +32,16 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.ProtoPackageIsVersion2 // please upgrade the proto package
 
-type Int32 struct {
-	Value int32 `protobuf:"varint,1,opt,name=value" json:"value,omitempty"`
+type Int64 struct {
+	Value int64 `protobuf:"varint,1,opt,name=value" json:"value,omitempty"`
 }
 
-func (m *Int32) Reset()                    { *m = Int32{} }
-func (m *Int32) String() string            { return proto.CompactTextString(m) }
-func (*Int32) ProtoMessage()               {}
-func (*Int32) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{0} }
+func (m *Int64) Reset()                    { *m = Int64{} }
+func (m *Int64) String() string            { return proto.CompactTextString(m) }
+func (*Int64) ProtoMessage()               {}
+func (*Int64) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{0} }
 
-func (m *Int32) GetValue() int32 {
+func (m *Int64) GetValue() int64 {
 	if m != nil {
 		return m.Value
 	}
@@ -49,7 +49,7 @@ func (m *Int32) GetValue() int32 {
 }
 
 func init() {
-	proto.RegisterType((*Int32)(nil), "go_grpc_eg.Int32")
+	proto.RegisterType((*Int64)(nil), "go_grpc_eg.Int64")
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -63,7 +63,8 @@ const _ = grpc.SupportPackageIsVersion4
 // Client API for Greeter service
 
 type GreeterClient interface {
-	CalculateSquare(ctx context.Context, in *Int32, opts ...grpc.CallOption) (*Int32, error)
+	CalculateSquare(ctx context.Context, in *Int64, opts ...grpc.CallOption) (*Int64, error)
+	CalculateCube(ctx context.Context, in *Int64, opts ...grpc.CallOption) (*Int64, error)
 }
 
 type greeterClient struct {
@@ -74,9 +75,18 @@ func NewGreeterClient(cc *grpc.ClientConn) GreeterClient {
 	return &greeterClient{cc}
 }
 
-func (c *greeterClient) CalculateSquare(ctx context.Context, in *Int32, opts ...grpc.CallOption) (*Int32, error) {
-	out := new(Int32)
+func (c *greeterClient) CalculateSquare(ctx context.Context, in *Int64, opts ...grpc.CallOption) (*Int64, error) {
+	out := new(Int64)
 	err := grpc.Invoke(ctx, "/go_grpc_eg.Greeter/CalculateSquare", in, out, c.cc, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *greeterClient) CalculateCube(ctx context.Context, in *Int64, opts ...grpc.CallOption) (*Int64, error) {
+	out := new(Int64)
+	err := grpc.Invoke(ctx, "/go_grpc_eg.Greeter/CalculateCube", in, out, c.cc, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -86,7 +96,8 @@ func (c *greeterClient) CalculateSquare(ctx context.Context, in *Int32, opts ...
 // Server API for Greeter service
 
 type GreeterServer interface {
-	CalculateSquare(context.Context, *Int32) (*Int32, error)
+	CalculateSquare(context.Context, *Int64) (*Int64, error)
+	CalculateCube(context.Context, *Int64) (*Int64, error)
 }
 
 func RegisterGreeterServer(s *grpc.Server, srv GreeterServer) {
@@ -94,7 +105,7 @@ func RegisterGreeterServer(s *grpc.Server, srv GreeterServer) {
 }
 
 func _Greeter_CalculateSquare_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Int32)
+	in := new(Int64)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -106,7 +117,25 @@ func _Greeter_CalculateSquare_Handler(srv interface{}, ctx context.Context, dec 
 		FullMethod: "/go_grpc_eg.Greeter/CalculateSquare",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GreeterServer).CalculateSquare(ctx, req.(*Int32))
+		return srv.(GreeterServer).CalculateSquare(ctx, req.(*Int64))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Greeter_CalculateCube_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Int64)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GreeterServer).CalculateCube(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/go_grpc_eg.Greeter/CalculateCube",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GreeterServer).CalculateCube(ctx, req.(*Int64))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -119,6 +148,10 @@ var _Greeter_serviceDesc = grpc.ServiceDesc{
 			MethodName: "CalculateSquare",
 			Handler:    _Greeter_CalculateSquare_Handler,
 		},
+		{
+			MethodName: "CalculateCube",
+			Handler:    _Greeter_CalculateCube_Handler,
+		},
 	},
 	Streams:  []grpc.StreamDesc{},
 	Metadata: "go_grpc_eg.proto",
@@ -127,13 +160,14 @@ var _Greeter_serviceDesc = grpc.ServiceDesc{
 func init() { proto.RegisterFile("go_grpc_eg.proto", fileDescriptor0) }
 
 var fileDescriptor0 = []byte{
-	// 120 bytes of a gzipped FileDescriptorProto
+	// 132 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0x12, 0x48, 0xcf, 0x8f, 0x4f,
 	0x2f, 0x2a, 0x48, 0x8e, 0x4f, 0x4d, 0xd7, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0xe2, 0x42, 0x88,
-	0x28, 0xc9, 0x72, 0xb1, 0x7a, 0xe6, 0x95, 0x18, 0x1b, 0x09, 0x89, 0x70, 0xb1, 0x96, 0x25, 0xe6,
-	0x94, 0xa6, 0x4a, 0x30, 0x2a, 0x30, 0x6a, 0xb0, 0x06, 0x41, 0x38, 0x46, 0x2e, 0x5c, 0xec, 0xee,
+	0x28, 0xc9, 0x72, 0xb1, 0x7a, 0xe6, 0x95, 0x98, 0x99, 0x08, 0x89, 0x70, 0xb1, 0x96, 0x25, 0xe6,
+	0x94, 0xa6, 0x4a, 0x30, 0x2a, 0x30, 0x6a, 0x30, 0x07, 0x41, 0x38, 0x46, 0xb5, 0x5c, 0xec, 0xee,
 	0x45, 0xa9, 0xa9, 0x25, 0xa9, 0x45, 0x42, 0x96, 0x5c, 0xfc, 0xce, 0x89, 0x39, 0xc9, 0xa5, 0x39,
 	0x89, 0x25, 0xa9, 0xc1, 0x85, 0xa5, 0x89, 0x45, 0xa9, 0x42, 0x82, 0x7a, 0x48, 0x66, 0x83, 0x8d,
-	0x91, 0xc2, 0x14, 0x52, 0x62, 0x48, 0x62, 0x03, 0xdb, 0x6b, 0x0c, 0x08, 0x00, 0x00, 0xff, 0xff,
-	0x5a, 0xa6, 0x52, 0xe0, 0x8b, 0x00, 0x00, 0x00,
+	0x91, 0xc2, 0x14, 0x52, 0x62, 0x10, 0x32, 0xe7, 0xe2, 0x85, 0x6b, 0x75, 0x2e, 0x4d, 0x22, 0x5a,
+	0x63, 0x12, 0x1b, 0xd8, 0xc1, 0xc6, 0x80, 0x00, 0x00, 0x00, 0xff, 0xff, 0x3f, 0x75, 0x85, 0x7f,
+	0xc4, 0x00, 0x00, 0x00,
 }
